@@ -1,5 +1,5 @@
 {
-  "name": "bibimbap",
+  "name": "@smallpdf/bibimbap",
   "version": "0.1.4",
   "description": "",
   "main": "bibimbap.js",
