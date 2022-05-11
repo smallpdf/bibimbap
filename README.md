@@ -1,3 +1,5 @@
+> **INFO**: Forked coz the original version was removed from npm repo
+
 # Bibimbap
 
 Bibimbap is a simple JavaScript immutable tree data structure supporting cursors.
@@ -26,47 +28,45 @@ Unlike in Baobap cursors don't emit update events. The idea is to re-render ever
 A [todo](https://github.com/manuelstofer/todo-bibimbap-deku) component implemented with Deku
 
 ```js
-import { element } from 'deku';
-import Input from './input.jsx';
-import './todo.css';
+import { element } from "deku";
+import Input from "./input.jsx";
+import "./todo.css";
 
 /**
  * Todo Component
  */
 export default {
-  render({props: {cursor}}) {
-
+  render({ props: { cursor } }) {
     // generates the list of items
-    const items = cursor.select('items')
-      .map(cursor => {
-        return <li>
-                 { cursor.get() } <span onClick={ cursor.remover }>✖</span>
-               </li>;
-      });
+    const items = cursor.select("items").map((cursor) => {
+      return (
+        <li>
+          {cursor.get()} <span onClick={cursor.remover}>✖</span>
+        </li>
+      );
+    });
 
-    return <div class="todo">
-             <form onSubmit={ addItem }>
-               <ul>
-                 { items }
-               </ul>
-               <Input cursor={ cursor } name="new-item" type="text" />
-               <button type="submit" disabled={ !cursor.get('new-item') }>
-                 Add
-               </button>
-             </form>
-           </div>;
+    return (
+      <div class="todo">
+        <form onSubmit={addItem}>
+          <ul>{items}</ul>
+          <Input cursor={cursor} name="new-item" type="text" />
+          <button type="submit" disabled={!cursor.get("new-item")}>
+            Add
+          </button>
+        </form>
+      </div>
+    );
 
     /**
      * Action to add a item to the list
      */
     function addItem(ev) {
       ev.preventDefault();
-      cursor
-        .push('items', cursor.get('new-item'))
-        .set('new-item', '');
+      cursor.push("items", cursor.get("new-item")).set("new-item", "");
     }
-  }
-}
+  },
+};
 ```
 
 # State
@@ -74,11 +74,10 @@ export default {
 Create new application state
 
 ```js
-var state = new Bibimbap({ some: 'data' });
+var state = new Bibimbap({ some: "data" });
 ```
 
 # Cursors
-
 
 #### state.cursor(name)
 
@@ -103,7 +102,6 @@ state.cursor().select('first', 'second').name(); // "first.second"
 
 Commit the state of a cursor back to the application state. By default cursors autocommit.
 
-
 # Navigation
 
 #### cursor.select(key)
@@ -111,10 +109,10 @@ Commit the state of a cursor back to the application state. By default cursors a
 Navigate down in tree
 
 ```js
-cursor.select('key');
-cursor.select('first', 'second');
-cursor.select(['first', 'second']);
-cursor.select('first').select('second');
+cursor.select("key");
+cursor.select("first", "second");
+cursor.select(["first", "second"]);
+cursor.select("first").select("second");
 ```
 
 #### cursor.up()
@@ -125,18 +123,16 @@ Navigate one level up in tree
 
 Navigate up to the root node
 
-
 #### optional keys
 
 Almost all of the following methods accept optional key arguments. But they have no effect on the returned
 cursor, just on the current operation.
 
 ```js
-
-var nextCursor = cursor.set('first', 'second', 'value'); // nextCursor has still the same location
-cursor.set(['first', 'second'], 'value');                // keys can also be in an array
-
+var nextCursor = cursor.set("first", "second", "value"); // nextCursor has still the same location
+cursor.set(["first", "second"], "value"); // keys can also be in an array
 ```
+
 # Get data
 
 #### cursor.get()
@@ -144,18 +140,18 @@ cursor.set(['first', 'second'], 'value');                // keys can also be in 
 Get data from the tree
 
 ```js
-cursor.get('key');
-cursor.get('first', 'second');
-cursor.get(['first', 'second']);
+cursor.get("key");
+cursor.get("first", "second");
+cursor.get(["first", "second"]);
 ```
 
 #### cursor.only(attributes)
 
-Get only certain attributes, like _.pick({a: 1, b: 2, c:3}, ['a','b'])
+Get only certain attributes, like \_.pick({a: 1, b: 2, c:3}, ['a','b'])
 
 ```js
-var state = new Bibimbap({ test: { a: 1, b:2 } });
-state.cursor().only('test', ['a']); // { a: 1 }
+var state = new Bibimbap({ test: { a: 1, b: 2 } });
+state.cursor().only("test", ["a"]); // { a: 1 }
 ```
 
 #### cursor.map((cursor, key) => value)
@@ -164,7 +160,7 @@ Map over the children
 
 ```js
 cursor.map(function (cursor, key) {
-  return 'hello' + cursor.get()
+  return "hello" + cursor.get();
 });
 ```
 
@@ -179,22 +175,19 @@ Tests if data at the cursors location exists
 Set a value. Autocommited unless in a .transaction
 
 ```js
-cursor.set(1);                                           // 1
-cursor.set('test', 'hello');                             // { test: 'hello' }
-cursor.set('first', 'second', 'hello');                  // { first: { second: 'hello} }
-cursor.set(['test'], 'hello');                           // { test: 'hello' }
-cursor.set('test', 'hello').set('test2', 'bla').get();   // { test: 'hello', test2: 'bla' }
+cursor.set(1); // 1
+cursor.set("test", "hello"); // { test: 'hello' }
+cursor.set("first", "second", "hello"); // { first: { second: 'hello} }
+cursor.set(["test"], "hello"); // { test: 'hello' }
+cursor.set("test", "hello").set("test2", "bla").get(); // { test: 'hello', test2: 'bla' }
 ```
-
 
 #### cursor.setter(value)
 
 Like set but returns a function that will set when called
 
 ```js
-<div onClick={ cursor.setter('clicked', 'yes') } >
-  clicked: { cursor.get('clicked') }
-</div>
+<div onClick={cursor.setter("clicked", "yes")}>clicked: {cursor.get("clicked")}</div>
 ```
 
 #### cursor.push(value)
@@ -237,12 +230,5 @@ Transactions allow to perform multiple actions before commiting back to the stat
 Start a transaction
 
 ```js
-cursor.transaction()
-  .select('example')
-  .set('bla')
-  .up()
-  .set('test', 5)
-  .commit()
+cursor.transaction().select("example").set("bla").up().set("test", 5).commit();
 ```
-
-
